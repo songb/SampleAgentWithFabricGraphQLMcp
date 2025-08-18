@@ -39,7 +39,6 @@ DEPLOYMENT_NAME=your-gpt-deployment-name
 # MCP Server Configuration
 MCP_SERVER_URL=https://your-mcp-server-url
 
-PRIVATE_AUTHORITY=https://login.windows-ppe.net
 SCOPE=https://analysis.windows-int.net/powerbi/api/user_impersonation
 ```
 

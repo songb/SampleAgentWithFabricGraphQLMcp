@@ -12,6 +12,9 @@ import json
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
+logging.getLogger("openai.agents").setLevel(logging.ERROR)
+logging.getLogger("azure").setLevel(logging.ERROR)
+logging.getLogger("httpx").setLevel(logging.ERROR)
 logger = logging.getLogger(__name__)
 
 class MyTestAgent:
@@ -52,7 +55,8 @@ class MyTestAgent:
             params={
                 "url": self.mcp_server_url,
                 "headers": headers
-            }
+            },
+            client_session_timeout_seconds=30  # Increase timeout to 30 seconds
         )
         
         try:
@@ -168,15 +172,16 @@ async def main():
         system_message = """You are a helpful AI assistant with access to various tools through an MCP server. 
         Use the available tools when they can help answer the user's questions or complete their tasks."""
         
-        # Example conversation
-        user_input = "Hello! What tools do you have available?"
-        
-        print(f"User: {user_input}")
-        response = await agent.chat(user_input, system_message)
-        print('\n\n\n*****************************************************\n')
-        print(f"Assistant: {response}")
-        print('\n*****************************************************\n\n\n')
-        
+        while True:
+            user_input = input("\nYou: ")
+            if user_input.lower() in ['quit', 'exit', 'bye']:
+                logger.info("Goodbye!")
+                break
+            
+            if user_input.strip():
+                response = await agent.chat(user_input, system_message)
+                logger.info(f"Assistant: {response}")
+
     except Exception as e:
         logger.error(f"Error in main: {e}")
     finally:

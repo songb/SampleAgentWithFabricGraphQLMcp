@@ -86,7 +86,7 @@ class MyTestAgent:
         if private_authority:
             app = InteractiveBrowserCredential(authority=private_authority)
         else:
-            app = DefaultAzureCredential()
+            app = InteractiveBrowserCredential()
 
         bearer_token = app.get_token(scp).token
         return bearer_token
